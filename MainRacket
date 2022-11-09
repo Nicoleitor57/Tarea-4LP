@@ -1,16 +1,102 @@
+#lang scheme
+
+
+(define (inverso lista n)
+  (let listar ((l '()) (i 0) (l2 lista))
+    (if (= i n)
+        l
+        (if (empty? l2)
+          (listar (append l (list i)) (+ i 1) l2)  
+          (if (= i (car l2))
+              (listar l (+ i 1) (cdr l2))
+              (listar (append l (list i)) (+ i 1) l2))))))
+
+
 (define (umbral_cola lista umbral tipo)
-  (let listar ((l '()) (i 0) (l2 lista) (num umbral))
-    (cond
-      [(equal? (num #\M))
-       (if (> (car l2) umbral)
-        (listar (append l (list (car l2))) (+ i 1) (cdr l2))
+  (let listar ((l '()) (i 0) (l2 lista))
+    (if (empty? l2)
+        l
+        (cond
+      [(equal? tipo #\M)(if (> (car l2) umbral)
+        (listar (append l (list i)) (+ i 1) (cdr l2))
         (listar l (+ i 1) (cdr l2))
         )]
-      [(equal? (num #\m))
-       (if (< (car l2) umbral)
-        (listar (append l (list (car l2))) (+ i 1) (cdr l2))
+      [(equal? tipo #\m)(if (< (car l2) umbral)
+        (listar (append l (list i)) (+ i 1) (cdr l2))
         (listar l (+ i 1) (cdr l2))
         )]
+     )
+    )
+   )
+  )
+
+
+(define (umbral_simple lista umbral tipo)
+  (let listar ((l '()) (i 0) (l2 lista))
+    (if (empty? l2)
+        l
+        (cond
+      [(equal? tipo #\M)(if (> (car l2) umbral)
+        (append '() ((listar (append l (list i)) (+ i 1) (cdr l2))))
+        (listar l (+ i 1) (cdr l2))
+        )]
+      [(equal? tipo #\m)(if (< (car l2) umbral)
+        (append '() ((listar (append l (list i)) (+ i 1) (cdr l2))))
+        (listar l (+ i 1) (cdr l2))
+        )]
+     )
+    )
+   )
+  )
+
+
+(define (modsel_cola lista seleccion f)
+  (let listar (( l'()) (l2 lista) (i 0))
+    (let listar1 ((l3 seleccion))
+      (if (empty? l2)
+          l
+          (if (empty? l3)
+              (listar (append l (list (car l2))) (cdr l2) (+ i 1)) ;;(listar  l (cdr l2) (1) (+ i 1))
+              (if (= (car l3) i)
+                (listar (append l (list (f (car l2)))) (cdr l2) (+ i 1))
+                (listar1 (cdr l3))
+              )
+          )
       )
     )
   )
+)
+
+
+(define (modsel_simple lista seleccion f)
+  (let listar (( l'()) (l2 lista) (i 0))
+    (let listar1 ((l3 seleccion))
+      (if (empty? l2)
+          l
+          (if (empty? l3)
+              (append '() (listar (append l (list (car l2))) (cdr l2) (+ i 1)))
+              (if (= (car l3) i)
+                (append '() (listar (append l (list (f (car l2)))) (cdr l2) (+ i 1)))
+                (listar1 (cdr l3))
+              )
+          )
+      )
+    )
+  )
+)
+     
+                                               
+                                               
+                                               
+                         
+
+(inverso '(1 3 7) 10)
+(inverso '(1 3 7) 10)
+(umbral_cola '(15 2 1 3 27 5 10) 5 #\M)
+(umbral_simple '(15 2 1 3 27 5 10) 5 #\m)
+(modsel_cola '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
+(modsel_cola '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
+(modsel_simple '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
+(modsel_simple '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
+
+
