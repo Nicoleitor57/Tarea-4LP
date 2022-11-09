@@ -1,0 +1,16 @@
+(define (umbral_cola lista umbral tipo)
+  (let listar ((l '()) (i 0) (l2 lista) (num umbral))
+    (cond
+      [(equal? (num #\M))
+       (if (> (car l2) umbral)
+        (listar (append l (list (car l2))) (+ i 1) (cdr l2))
+        (listar l (+ i 1) (cdr l2))
+        )]
+      [(equal? (num #\m))
+       (if (< (car l2) umbral)
+        (listar (append l (list (car l2))) (+ i 1) (cdr l2))
+        (listar l (+ i 1) (cdr l2))
+        )]
+      )
+    )
+  )
