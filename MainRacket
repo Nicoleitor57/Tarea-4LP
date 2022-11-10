@@ -30,6 +30,24 @@
    )
   )
 
+(define (umbral_cola_valor lista umbral tipo)
+  (let listar ((l '()) (i 0) (l2 lista))
+    (if (empty? l2)
+        l
+        (cond
+      [(equal? tipo #\M)(if (> (car l2) umbral)
+        (listar (append l (list (car l2))) (+ i 1) (cdr l2))
+        (listar l (+ i 1) (cdr l2))
+        )]
+      [(equal? tipo #\m)(if (< (car l2) umbral)
+        (listar (append l (list (car l2))) (+ i 1) (cdr l2))
+        (listar l (+ i 1) (cdr l2))
+        )]
+     )
+    )
+   )
+  )
+
 
 (define (umbral_simple lista umbral tipo)
   (let listar ((l '()) (i 0) (l2 lista))
@@ -49,7 +67,6 @@
    )
   )
 
-
 (define (modsel_cola lista seleccion f)
   (let listar (( l'()) (l2 lista) (i 0))
     (let listar1 ((l3 seleccion))
@@ -67,7 +84,6 @@
   )
 )
 
-
 (define (modsel_simple lista seleccion f)
   (let listar (( l'()) (l2 lista) (i 0))
     (let listar1 ((l3 seleccion))
@@ -84,19 +100,48 @@
     )
   )
 )
+
+(define (len lis)
+   (let listar ((l '()) (i 0))
+     (if (= i lis)
+         l
+         (listar (append l (list i)) (+ i 1))
+         )
+     )
+  )
+         
      
-                                               
-                                               
+     
+
+
+(define (estables lista umbral fM fm)
+  (let listar ((l '()) (l2 lista))
+    (append l
+            (list(length (umbral_cola_valor (modsel_cola (umbral_cola_valor l2 umbral #\M) (len (length (umbral_cola_valor l2 umbral #\M))) fM) umbral #\M)))
+            (list(length (umbral_cola_valor (modsel_cola (umbral_cola_valor l2 umbral #\m) (len (length (umbral_cola_valor l2 umbral #\m))) fm) umbral #\m))))
+   
+    )
+  )
+
+    
+;;(length (modsel_cola (umbral_cola_valor l2 umbral #\M) (len (length (umbral_cola_valor l2 umbral #\M))) fM))
+;;(length (umbral_cola_valor (modsel_cola (umbral_cola_valor l2 umbral #\m) (len (length (umbral_cola_valor l2 umbral #\m))) fm) umbral #\m))                                            
+;;(append l (umbral_cola l2 5 #\M) (umbral_cola l2 5 #\m))                                              
                                                
                          
 
-(inverso '(1 3 7) 10)
-(inverso '(1 3 7) 10)
-(umbral_cola '(15 2 1 3 27 5 10) 5 #\M)
-(umbral_simple '(15 2 1 3 27 5 10) 5 #\m)
-(modsel_cola '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
-(modsel_cola '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
-(modsel_simple '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
-(modsel_simple '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
+;;(inverso '(1 3 7) 10)
+;;(inverso '(1 3 7) 10)
+;;(umbral_cola '(15 2 1 3 27 5 10) 5 #\M)
+;;(umbral_simple '(15 2 1 3 27 5 10) 5 #\m)
+;;(modsel_cola '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
+;;(modsel_cola '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
+;;(modsel_simple '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
+;;(modsel_simple '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
+(umbral_cola_valor '(15 2 1 3 27 5 10) 5 #\M)
+;;(len 3)
+(estables '(15 2 1 3 27 5 10) 5 (lambda (x) (/ x 2)) (lambda (x) (* x 2)))
+;;(2 1)
+
 
 
