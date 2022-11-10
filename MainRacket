@@ -1,6 +1,9 @@
 #lang scheme
 
+;;muestra una lista con los n primeros numeros sin la lista que recive como parametro
 
+;;lista: una lista con los items a no estar en los primeros n numeros
+;;n: entero que indica el maximo-1 de la lista
 (define (inverso lista n)
   (let listar ((l '()) (i 0) (l2 lista))
     (if (= i n)
@@ -11,7 +14,11 @@
               (listar l (+ i 1) (cdr l2))
               (listar (append l (list i)) (+ i 1) l2))))))
 
+;;muestra una lista con los indices de la lista que se recivio como parametro que cumplan con ser mayor o menor que el umbral, recursion de cola
 
+;;lista: lista de enteros a la cual se le aplica la funcion
+;;umbral: entero el cual define que tan grandes o chicos pueden ser los enteros
+;;tipo: char que define si los valores deben ser mayor o menor al umbral
 (define (umbral_cola lista umbral tipo)
   (let listar ((l '()) (i 0) (l2 lista))
     (if (empty? l2)
@@ -30,16 +37,23 @@
    )
   )
 
+;;devuelve todos los valores mayores o menores al umbral, depende del tipo, recursion de cola
+
+;;lista: lista de enteros a la cual se le realizara el analisis
+;;umbral: entero que define que tan grandes o chicos deben ser los valores
+;;tipo: char que define si los enteros deben ser mayor o menor al umbral
 (define (umbral_cola_valor lista umbral tipo)
   (let listar ((l '()) (i 0) (l2 lista))
     (if (empty? l2)
         l
         (cond
-      [(equal? tipo #\M)(if (> (car l2) umbral)
+      [(equal? tipo #\M)
+       (if (> (car l2) umbral)
         (listar (append l (list (car l2))) (+ i 1) (cdr l2))
         (listar l (+ i 1) (cdr l2))
         )]
-      [(equal? tipo #\m)(if (< (car l2) umbral)
+      [(equal? tipo #\m)
+       (if (< (car l2) umbral)
         (listar (append l (list (car l2))) (+ i 1) (cdr l2))
         (listar l (+ i 1) (cdr l2))
         )]
@@ -48,18 +62,22 @@
    )
   )
 
+;;muestra una lista con los indices de la lista que se recivio como parametro que cumplan con ser mayor o menor que el umbral, recursion simple
 
+;;lista: lista de enteros a la cual se le aplica la funcion
+;;umbral: entero el cual define que tan grandes o chicos pueden ser los enteros
+;;tipo: char que define si los valores deben ser mayor o menor al umbral
 (define (umbral_simple lista umbral tipo)
   (let listar ((l '()) (i 0) (l2 lista))
     (if (empty? l2)
         l
         (cond
       [(equal? tipo #\M)(if (> (car l2) umbral)
-        (append '() ((listar (append l (list i)) (+ i 1) (cdr l2))))
+        (append '() (listar (append l (list i)) (+ i 1) (cdr l2)))
         (listar l (+ i 1) (cdr l2))
         )]
       [(equal? tipo #\m)(if (< (car l2) umbral)
-        (append '() ((listar (append l (list i)) (+ i 1) (cdr l2))))
+        (append '() (listar (append l (list i)) (+ i 1) (cdr l2)))
         (listar l (+ i 1) (cdr l2))
         )]
      )
@@ -67,15 +85,21 @@
    )
   )
 
+;; recive dos listas, la segunda indica los indices de la primera lista a los cuales se debe aplicar lambda, recursion de cola
+
+;;lista: lista de enteros, la cual se modifica en vase a seleccion y lambda
+;;seleccion; indices que indican a que valores aplicar lambda
+;;f: lambda el cual define el procedimiento que conllevara las enteros en las posiciones indicadas
 (define (modsel_cola lista seleccion f)
   (let listar (( l'()) (l2 lista) (i 0))
     (let listar1 ((l3 seleccion))
       (if (empty? l2)
           l
           (if (empty? l3)
-              (listar (append l (list (car l2))) (cdr l2) (+ i 1)) ;;(listar  l (cdr l2) (1) (+ i 1))
+              (listar (append l (list (car l2))) (cdr l2) (+ i 1)) 
               (if (= (car l3) i)
-                (listar (append l (list (f (car l2)))) (cdr l2) (+ i 1))
+                (listar (append l (list
+                                   (f (car l2)))) (cdr l2) (+ i 1))
                 (listar1 (cdr l3))
               )
           )
@@ -84,6 +108,11 @@
   )
 )
 
+;; recive dos listas, la segunda indica los indices de la primera lista a los cuales se debe aplicar lambda, recursion simple
+
+;;lista: lista de enteros, la cual se modifica en vase a seleccion y lambda
+;;seleccion; indices que indican a que valores aplicar lambda
+;;f: lambda el cual define el procedimiento que conllevara las enteros en las posiciones indicadas
 (define (modsel_simple lista seleccion f)
   (let listar (( l'()) (l2 lista) (i 0))
     (let listar1 ((l3 seleccion))
@@ -101,6 +130,9 @@
   )
 )
 
+;;retorna una lista con los primeros n numeros
+
+;;lis: indica el lenght de la lista
 (define (len lis)
    (let listar ((l '()) (i 0))
      (if (= i lis)
@@ -113,13 +145,32 @@
      
      
 
+;;retorna la cantidad de numeros pertenecientes a lista que son mayores y menores al umbral antes y despues de aplicar lambda fM y fm
 
+;;lista: lista de enteros que contiene los valores a evaluar
+;;umbral: indica los valores maximos y minimos que deben tener los numeros
+;;fM: procedimiento aplicado a los numeros mayores que umbral
+;;fm: procediento aplicado a los numeros menores a umbral
 (define (estables lista umbral fM fm)
   (let listar ((l '()) (l2 lista))
     (append l
-            (list(length (umbral_cola_valor (modsel_cola (umbral_cola_valor l2 umbral #\M) (len (length (umbral_cola_valor l2 umbral #\M))) fM) umbral #\M)))
-            (list(length (umbral_cola_valor (modsel_cola (umbral_cola_valor l2 umbral #\m) (len (length (umbral_cola_valor l2 umbral #\m))) fm) umbral #\m))))
-   
+            (list
+             (length
+              (umbral_cola_valor
+               (modsel_cola
+                (umbral_cola_valor l2 umbral #\M)
+                (len
+                 (length
+                  (umbral_cola_valor l2 umbral #\M)))fM) umbral #\M)))
+            (list
+             (length
+              (umbral_cola_valor
+               (modsel_cola
+                (umbral_cola_valor l2 umbral #\m)
+                (len
+                 (length
+                  (umbral_cola_valor l2 umbral #\m))) fm) umbral #\m)))
+            )
     )
   )
 
@@ -127,21 +178,57 @@
 ;;(length (modsel_cola (umbral_cola_valor l2 umbral #\M) (len (length (umbral_cola_valor l2 umbral #\M))) fM))
 ;;(length (umbral_cola_valor (modsel_cola (umbral_cola_valor l2 umbral #\m) (len (length (umbral_cola_valor l2 umbral #\m))) fm) umbral #\m))                                            
 ;;(append l (umbral_cola l2 5 #\M) (umbral_cola l2 5 #\m))                                              
-                                               
-                         
+
+
+
+;;funcion que dependiendo del input usa la funcion umbral, modsel, estables
+
+;;lista: lista de lista de enteros que se usara en las funciones umbral/modsel/estables
+;;pos: indica cual de las lista se pasara como parametro en las funciones
+;;op: indica si se usara la funcion umbral, modsel o estables
+;;params: contiene los parametros respectivos a la funcion elegida
+(define (query lista pos op params)
+  (let listar ((l2 lista) (i 0))
+    (cond
+      [(equal? op 1)
+       (if (= i pos)
+           (umbral_cola (car l2) (car params) (car(cdr params)))
+           (listar (cdr l2) (+ i 1))
+           )]
+      [(equal? op 2)
+        (if (= i pos)
+           (modsel_cola (car l2) (car params) (car(cdr (params))))
+           (listar (cdr l2) (+ i 1))
+           )]
+      [(equal? op 3)
+       (if (= i pos)
+           (estables (car l2) (car params) (car(cdr params)) (car(cdr(cdr params))))
+           (listar (cdr l2) (+ i 1))
+       )]
+      )
+    )
+  )
 
 ;;(inverso '(1 3 7) 10)
 ;;(inverso '(1 3 7) 10)
 ;;(umbral_cola '(15 2 1 3 27 5 10) 5 #\M)
 ;;(umbral_simple '(15 2 1 3 27 5 10) 5 #\m)
-;;(modsel_cola '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
+(modsel_cola '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
 ;;(modsel_cola '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
 ;;(modsel_simple '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
 ;;(modsel_simple '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
-(umbral_cola_valor '(15 2 1 3 27 5 10) 5 #\M)
-;;(len 3)
-(estables '(15 2 1 3 27 5 10) 5 (lambda (x) (/ x 2)) (lambda (x) (* x 2)))
+;;(umbral_cola_valor '(15 2 1 3 27 5 10) 5 #\M)
+;;(estables '(15 2 1 3 27 5 10) 5 (lambda (x) (/ x 2)) (lambda (x) (* x 2)))
+;;(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 1 1 '(1 #\M))
+;;(0 1 2)
+;;(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 0 2 '((0 4) (lambda(x)
+;;(+ x 100))))
+;;(100 1 2 3 104)
+(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 2 3 '(5 (lambda (x)
+(/ x 2)) (lambda (x) (* x 2))))
 ;;(2 1)
+
+
 
 
 
