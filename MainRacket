@@ -1,4 +1,4 @@
-#lang scheme
+#lang scheme (current-namespace (make-base-namespace))
 
 ;;muestra una lista con los n primeros numeros sin la lista que recive como parametro
 
@@ -98,8 +98,7 @@
           (if (empty? l3)
               (listar (append l (list (car l2))) (cdr l2) (+ i 1)) 
               (if (= (car l3) i)
-                (listar (append l (list
-                                   (f (car l2)))) (cdr l2) (+ i 1))
+                (listar (append l (list(f (car l2)))) (cdr l2) (+ i 1))
                 (listar1 (cdr l3))
               )
           )
@@ -173,21 +172,14 @@
             )
     )
   )
-
-    
-;;(length (modsel_cola (umbral_cola_valor l2 umbral #\M) (len (length (umbral_cola_valor l2 umbral #\M))) fM))
-;;(length (umbral_cola_valor (modsel_cola (umbral_cola_valor l2 umbral #\m) (len (length (umbral_cola_valor l2 umbral #\m))) fm) umbral #\m))                                            
-;;(append l (umbral_cola l2 5 #\M) (umbral_cola l2 5 #\m))                                              
-
-
-
-;;funcion que dependiendo del input usa la funcion umbral, modsel, estables
+                                             
 
 ;;lista: lista de lista de enteros que se usara en las funciones umbral/modsel/estables
 ;;pos: indica cual de las lista se pasara como parametro en las funciones
 ;;op: indica si se usara la funcion umbral, modsel o estables
 ;;params: contiene los parametros respectivos a la funcion elegida
 (define (query lista pos op params)
+  
   (let listar ((l2 lista) (i 0))
     (cond
       [(equal? op 1)
@@ -197,37 +189,43 @@
            )]
       [(equal? op 2)
         (if (= i pos)
-           (modsel_cola (car l2) (car params) (car(cdr (params))))
+           (modsel_cola (car l2) (car params) (eval(car(cdr params))))
            (listar (cdr l2) (+ i 1))
            )]
       [(equal? op 3)
        (if (= i pos)
-           (estables (car l2) (car params) (car(cdr params)) (car(cdr(cdr params))))
+           (estables (car l2) (car params) (eval(car(cdr params))) (eval(car(cdr(cdr params)))))
            (listar (cdr l2) (+ i 1))
        )]
       )
     )
   )
-
-;;(inverso '(1 3 7) 10)
-;;(inverso '(1 3 7) 10)
-;;(umbral_cola '(15 2 1 3 27 5 10) 5 #\M)
-;;(umbral_simple '(15 2 1 3 27 5 10) 5 #\m)
+  
+"inverso"
+(inverso '(1 3 7) 10)
+(inverso '(1 3 7) 10)
+"umbral cola"
+(umbral_cola '(15 2 1 3 27 5 10) 5 #\M)
+"umbral simple"
+(umbral_simple '(15 2 1 3 27 5 10) 5 #\m)
+"modsel cola"
 (modsel_cola '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
-;;(modsel_cola '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
-;;(modsel_simple '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
-;;(modsel_simple '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
-;;(umbral_cola_valor '(15 2 1 3 27 5 10) 5 #\M)
-;;(estables '(15 2 1 3 27 5 10) 5 (lambda (x) (/ x 2)) (lambda (x) (* x 2)))
-;;(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 1 1 '(1 #\M))
+(modsel_cola '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
+"modesel simple"
+(modsel_simple '(15 2 1 3 27 5 10) '(3 1 2) (lambda (x) (+ x 5)))
+(modsel_simple '(15 2 1 3 27 5 10) '(0 4 6) (lambda (x) (modulo x 2)))
+(umbral_cola_valor '(15 2 1 3 27 5 10) 5 #\M)
+"estables"
+(estables '(15 2 1 3 27 5 10) 5 (lambda (x) (/ x 2)) (lambda (x) (* x 2)))
+"query"
+(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 1 1 '(1 #\M))
 ;;(0 1 2)
-;;(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 0 2 '((0 4) (lambda(x)
-;;(+ x 100))))
+(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 0 2 '((0 4) (lambda(x)(+ x 100))))
 ;;(100 1 2 3 104)
-(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 2 3 '(5 (lambda (x)
-(/ x 2)) (lambda (x) (* x 2))))
+(query '((0 1 2 3 4) (4 3 2 1 0) (15 2 1 3 27 5 10)) 2 3 '(5 (lambda (x)(/ x 2)) (lambda (x) (* x 2))))
 ;;(2 1)
 
+          
 
 
 
